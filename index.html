@@ -91,11 +91,11 @@
 
       const scriptURL = "https://script.google.com/macros/s/AKfycbykKKhX__2O4j1O7t2fzDuzLdlyVlkaZRlyxEwz-1TBkgzcTZxZx6p1IIdSaLL0_Uh-hQ/exec"; // Replace with actual web app URL
       try {
-        const response = await fetch(scriptURL, {
-          method: 'POST',
-          body: JSON.stringify(data),
-          headers: { 'Content-Type': 'application/json' }
-        });
+      const response = await fetch(url, {
+      method: "POST",
+      mode: "no-cors",
+      body: params
+                });
         const result = await response.text();
         document.getElementById('status').textContent = result;
         document.getElementById('activityForm').reset();
