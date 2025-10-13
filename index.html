@@ -1,181 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Writing Assignment</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      margin: 0;
-      background: white;
-      padding: 1rem;
-    }
-    .title {
-      background-color: #667eea;
-      color: white;
-      font-size: 1.6rem;
-      font-weight: bold;
-      padding: 1rem 2rem;
-      border-radius: 0.5rem;
-      margin-top: 1rem;
-      text-align: center;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      width: 90%;
-      max-width: 800px;
-    }
-    .exercise-container {
-      width: 90%;
-      max-width: 800px;
-      background: #fff;
-      padding: 1.5rem;
-      border-radius: 1rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      margin: 2rem auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2rem;
-      border: 1px solid #667eea;
-    }
-    .form-group {
-      width: 100%;
-      margin-bottom: 1rem;
-    }
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 0.75rem;
-      font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid #667eea;
-      box-sizing: border-box;
-    }
-    textarea {
-      min-height: 200px;
-      resize: vertical;
-    }
-    button {
-      margin-top: 1rem;
-      padding: 0.75rem;
-      font-size: 16px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-      width: 100%;
-    }
-    button:hover {
-      background: #45a049;
-    }
-    .message {
-      background: #d4edda;
-      color: #155724;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #c3e6cb;
-      margin-bottom: 15px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .character-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      margin-bottom: 10px;
-      width: 100%;
-    }
-    .character-bar button {
-      padding: 5px 8px;
-      font-size: 16px;
-      background: #667eea;
-      color: white;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      width: auto;
-      margin-top: 0;
-    }
-    .character-bar button:hover {
-      background: #5a67d8;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writing Assignment</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            background: white;
+            padding: 1rem;
+        }
+        .title {
+            background-color: #667eea;
+            color: white;
+            font-size: 1.6rem;
+            font-weight: bold;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+        }
+        .exercise-container {
+            width: 90%;
+            max-width: 800px;
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            border: 1px solid #667eea;
+        }
+        .form-group {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 20px; /* Increased font size for user text */
+            border-radius: 5px;
+            border: 1px solid #667eea;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            font-size: 16px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #c3e6cb;
+            margin-bottom: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .character-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .character-bar button {
+            padding: 10px 12px; /* Increased padding for larger buttons */
+            font-size: 24px; /* Increased font size for character buttons */
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: auto;
+            margin-top: 0;
+            min-width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .character-bar button:hover {
+            background: #5a67d8;
+        }
+    </style>
 </head>
 <body>
-  <div class="title">
-    Writing Assignment
-  </div>
-  <div class="exercise-container">
-    <div id="message-container"></div>
-    <form id="assignmentForm" style="width: 100%;">
-      <div class="form-group">
-        <label for="student_id">Student ID:</label>
-        <input type="text" id="student_id" name="student_id" required>
-      </div>
-      <div class="form-group">
-        <label for="assignment">Your Writing:</label>
-        <div class="character-bar">
-          <button type="button" onclick="insertCharacter('á')">á</button>
-          <button type="button" onclick="insertCharacter('é')">é</button>
-          <button type="button" onclick="insertCharacter('í')">í</button>
-          <button type="button" onclick="insertCharacter('ó')">ó</button>
-          <button type="button" onclick="insertCharacter('ú')">ú</button>
-          <button type="button" onclick="insertCharacter('ñ')">ñ</button>
-          <button type="button" onclick="insertCharacter('¿')">¿</button>
-          <button type="button" onclick="insertCharacter('¡')">¡</button>
-          <button type="button" onclick="insertCharacter('ü')">ü</button>
-        </div>
-        <textarea id="assignment" name="assignment" required></textarea>
-      </div>
-      <button type="submit">Submit Assignment</button>
-    </form>
-  </div>
-  <script>
-    function insertCharacter(char) {
-      const textarea = document.getElementById('assignment');
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const textBefore = textarea.value.substring(0, start);
-      const textAfter = textarea.value.substring(end);
-      textarea.value = textBefore + char + textAfter;
-      const newPos = start + char.length;
-      textarea.setSelectionRange(newPos, newPos);
-      textarea.focus();
-    }
-
-    document.getElementById("assignmentForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
-      const form = e.target;
-      const data = new FormData(form);
-      const params = new URLSearchParams(data);
-      const url = "https://script.google.com/macros/s/AKfycbwyQfsleKAuDCfrVRa8lBqCXAsP00AeKY9jSzt_EHC6eTxsVSodmhxbS-k_H_6BFeQrzA/exec";
-      try {
-        const response = await fetch(url, {
-          method: "POST",
-          mode: "no-cors",
-          body: params
+    <div class="title">Writing Assignment</div>
+    <div class="exercise-container">
+        <div id="message-container"></div>
+        <form id="assignmentForm" style="width: 100%;">
+            <div class="form-group">
+                <label for="student_id">Student ID:</label>
+                <input type="text" id="student_id" name="student_id" required>
+            </div>
+            <div class="form-group">
+                <label for="assignment">Your Writing:</label>
+                <div class="character-bar">
+                    <button type="button" onclick="insertCharacter('á')">á</button>
+                    <button type="button" onclick="insertCharacter('é')">é</button>
+                    <button type="button" onclick="insertCharacter('í')">í</button>
+                    <button type="button" onclick="insertCharacter('ó')">ó</button>
+                    <button type="button" onclick="insertCharacter('ú')">ú</button>
+                    <button type="button" onclick="insertCharacter('ñ')">ñ</button>
+                    <button type="button" onclick="insertCharacter('¿')">¿</button>
+                    <button type="button" onclick="insertCharacter('¡')">¡</button>
+                    <button type="button" onclick="insertCharacter('ü')">ü</button>
+                </div>
+                <textarea id="assignment" name="assignment" required></textarea>
+            </div>
+            <button type="submit">Submit Assignment</button>
+        </form>
+    </div>
+    <script>
+        function insertCharacter(char) {
+            const textarea = document.getElementById('assignment');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const textBefore = textarea.value.substring(0, start);
+            const textAfter = textarea.value.substring(end);
+            textarea.value = textBefore + char + textAfter;
+            const newPos = start + char.length;
+            textarea.setSelectionRange(newPos, newPos);
+            textarea.focus();
+        }
+        document.getElementById("assignmentForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const data = new FormData(form);
+            const params = new URLSearchParams(data);
+            const url = "https://script.google.com/macros/s/AKfycbwyQfsleKAuDCfrVRa8lBqCXAsP00AeKY9jSzt_EHC6eTxsVSodmhxbS-k_H_6BFeQrzA/exec";
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    mode: "no-cors",
+                    body: params
+                });
+                form.reset();
+                const msgContainer = document.getElementById("message-container");
+                msgContainer.innerHTML = '<div class="message">✅ Assignment submitted successfully! Thank you.</div>';
+                setTimeout(() => {
+                    window.location.href = window.location.pathname;
+                }, 3000);
+            } catch (error) {
+                alert("There was an error submitting your assignment. Please try again.");
+                console.error(error);
+            }
         });
-        form.reset();
-        const msgContainer = document.getElementById("message-container");
-        msgContainer.innerHTML = '<div class="message">✅ Assignment submitted successfully! Thank you.</div>';
-        setTimeout(() => {
-          window.location.href = window.location.pathname;
-        }, 3000);
-      } catch (error) {
-        alert("There was an error submitting your assignment. Please try again.");
-        console.error(error);
-      }
-    });
-  </script>
+    </script>
 </body>
 </html>
