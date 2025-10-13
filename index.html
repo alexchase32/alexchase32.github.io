@@ -6,38 +6,74 @@
   <title>Writing Assignment</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      background: white;
+      padding: 1rem;
     }
-    .container {
-      max-width: 700px;
-      margin: auto;
+    .title {
+      background-color: #667eea;
+      color: white;
+      font-size: 1.6rem;
+      font-weight: bold;
+      padding: 1rem 2rem;
+      border-radius: 0.5rem;
+      margin-top: 1rem;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 800px;
+    }
+    .exercise-container {
+      width: 90%;
+      max-width: 800px;
       background: #fff;
-      padding: 25px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      margin: 2rem auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      border: 1px solid #667eea;
     }
-    textarea {
+    .form-group {
       width: 100%;
-      min-height: 200px;
-      padding: 10px;
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.75rem;
       font-size: 16px;
       border-radius: 5px;
-      border: 1px solid #ccc;
+      border: 1px solid #667eea;
+      box-sizing: border-box;
+    }
+    textarea {
+      min-height: 200px;
       resize: vertical;
     }
-    input, button {
-      margin-top: 12px;
-      padding: 10px;
-      font-size: 16px;
-    }
     button {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      font-size: 16px;
       background: #4CAF50;
       color: white;
       border: none;
       cursor: pointer;
       border-radius: 5px;
+      width: 100%;
     }
     button:hover {
       background: #45a049;
@@ -49,52 +85,47 @@
       border-radius: 5px;
       border: 1px solid #c3e6cb;
       margin-bottom: 15px;
+      width: 100%;
+      box-sizing: border-box;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Writing Assignment</h2>
+  <div class="title">
+    Writing Assignment
+  </div>
+  <div class="exercise-container">
     <div id="message-container"></div>
-
-    <form id="assignmentForm">
-      <label for="student_id">Student ID:</label><br>
-      <input type="text" id="student_id" name="student_id" required><br><br>
-
-      <label for="assignment">Your Writing:</label><br>
-      <textarea id="assignment" name="assignment" required></textarea><br><br>
-
+    <form id="assignmentForm" style="width: 100%;">
+      <div class="form-group">
+        <label for="student_id">Student ID:</label>
+        <input type="text" id="student_id" name="student_id" required>
+      </div>
+      <div class="form-group">
+        <label for="assignment">Your Writing:</label>
+        <textarea id="assignment" name="assignment" required></textarea>
+      </div>
       <button type="submit">Submit Assignment</button>
     </form>
   </div>
-
   <script>
     document.getElementById("assignmentForm").addEventListener("submit", async function(e) {
       e.preventDefault();
       const form = e.target;
-
       const data = new FormData(form);
       const params = new URLSearchParams(data);
-
       const url = "https://script.google.com/macros/s/AKfycbwyQfsleKAuDCfrVRa8lBqCXAsP00AeKY9jSzt_EHC6eTxsVSodmhxbS-k_H_6BFeQrzA/exec";
-
       try {
         const response = await fetch(url, {
           method: "POST",
-          mode: "no-cors", // Required for Apps Script public form posts
+          mode: "no-cors",
           body: params
         });
-
-        // Clear form
         form.reset();
-
-        // Show success message
         const msgContainer = document.getElementById("message-container");
         msgContainer.innerHTML = '<div class="message">✅ Assignment submitted successfully! Thank you.</div>';
-
-        // Optional: redirect back after a few seconds
         setTimeout(() => {
-          window.location.href = window.location.pathname; // reload same page without message
+          window.location.href = window.location.pathname;
         }, 3000);
       } catch (error) {
         alert("There was an error submitting your assignment. Please try again.");
