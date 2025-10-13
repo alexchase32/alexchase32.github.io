@@ -42,12 +42,22 @@
     button:hover {
       background: #45a049;
     }
+    .message {
+      background: #d4edda;
+      color: #155724;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #c3e6cb;
+      margin-bottom: 15px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Writing Assignment</h2>
-    <form method="POST" action="submit_assignment.php">
+    <div id="message-container"></div>
+
+    <form id="assignmentForm">
       <label for="student_id">Student ID:</label><br>
       <input type="text" id="student_id" name="student_id" required><br><br>
 
@@ -57,5 +67,40 @@
       <button type="submit">Submit Assignment</button>
     </form>
   </div>
+
+  <script>
+    document.getElementById("assignmentForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const form = e.target;
+
+      const data = new FormData(form);
+      const params = new URLSearchParams(data);
+
+      const url = "https://script.google.com/macros/s/AKfycbxXYZ1234567890/exec";
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          mode: "no-cors", // Required for Apps Script public form posts
+          body: params
+        });
+
+        // Clear form
+        form.reset();
+
+        // Show success message
+        const msgContainer = document.getElementById("message-container");
+        msgContainer.innerHTML = '<div class="message">✅ Assignment submitted successfully! Thank you.</div>';
+
+        // Optional: redirect back after a few seconds
+        setTimeout(() => {
+          window.location.href = window.location.pathname; // reload same page without message
+        }, 3000);
+      } catch (error) {
+        alert("There was an error submitting your assignment. Please try again.");
+        console.error(error);
+      }
+    });
+  </script>
 </body>
 </html>
