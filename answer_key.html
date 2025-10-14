@@ -1,150 +1,297 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Answer Key Manager</title>
-<style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex; flex-direction: column; align-items: center;
-    background: #f9f9f9; min-height: 100vh; margin: 0; padding: 2rem;
-  }
-  .title {
-    background-color: #667eea; color: white; font-size: 1.6rem; font-weight: bold;
-    padding: 1rem 2rem; border-radius: 0.5rem; margin-bottom: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  }
-  .form-container {
-    background: #fff; width: 90%; max-width: 850px; border: 1px solid #667eea;
-    border-radius: 1rem; box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    padding: 2rem; display: flex; flex-direction: column; gap: 1rem;
-  }
-  label { font-weight: 600; display: block; margin-bottom: 0.3rem; }
-  input, select {
-    width: 100%; padding: 0.7rem; font-size: 1rem;
-    border: 1px solid #ccc; border-radius: 5px;
-  }
-  button {
-    background-color: #4CAF50; color: #fff; border: none; border-radius: 6px;
-    padding: 0.8rem; font-size: 1rem; cursor: pointer;
-  }
-  button:hover { background-color: #45a049; }
-  .answer-item { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
-  .remove-btn {
-    background: #e53e3e; color: white; border: none; border-radius: 4px;
-    padding: 0 10px; cursor: pointer; font-weight: bold;
-  }
-  .remove-btn:hover { background: #c53030; }
-  .message {
-    margin-top: 1rem; color: #155724; background: #d4edda; border: 1px solid #c3e6cb;
-    border-radius: 5px; padding: 0.75rem; text-align: center; display: none;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Answer Key Creator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            background: white;
+            padding: 1rem;
+        }
+
+        .title {
+            background-color: #667eea;
+            color: white;
+            font-size: 1.6rem;
+            font-weight: bold;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .exercise-container {
+            width: 90%;
+            max-width: 800px;
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            border: 1px solid #667eea;
+        }
+
+        .form-group {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #667eea;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: Arial, sans-serif;
+        }
+
+        button {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            font-size: 16px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        button[type="submit"] {
+            background: #4CAF50;
+        }
+
+        button[type="submit"]:hover {
+            background: #45a049;
+        }
+
+        .add-question-btn {
+            background: #667eea;
+            width: auto;
+            padding: 0.75rem 2rem;
+            margin-top: 0.5rem;
+        }
+
+        .add-question-btn:hover {
+            background: #5a67d8;
+        }
+
+        .remove-question-btn {
+            background: #f44336;
+            width: auto;
+            padding: 0.5rem 1rem;
+            margin-top: 0.5rem;
+            font-size: 14px;
+        }
+
+        .remove-question-btn:hover {
+            background: #da190b;
+        }
+
+        .message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #c3e6cb;
+            margin-bottom: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .question-item {
+            width: 100%;
+            border: 2px solid #e0e0e0;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            background: #f9f9f9;
+        }
+
+        .question-header {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-size: 18px;
+        }
+
+        .questions-container {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-  <div class="title">Answer Key Manager</div>
+    <div class="title">Answer Key Creator</div>
+    
+    <div class="exercise-container">
+        <div id="message-container"></div>
+        
+        <form id="answerKeyForm" style="width: 100%;">
+            <div class="form-group">
+                <label for="activity_name">Activity Name:</label>
+                <input type="text" id="activity_name" name="activity_name" required>
+            </div>
 
-  <div class="form-container">
-    <label for="activitySelect">Select Existing Activity:</label>
-    <select id="activitySelect">
-      <option value="">— Create New —</option>
-    </select>
+            <div class="form-group">
+                <label for="activity_type">Activity Type:</label>
+                <select id="activity_type" name="activity_type" required>
+                    <option value="">Select Type</option>
+                    <option value="Multiple Choice">Multiple Choice</option>
+                    <option value="Fill in the Blank">Fill in the Blank</option>
+                    <option value="Short Answer">Short Answer</option>
+                    <option value="True/False">True/False</option>
+                    <option value="Matching">Matching</option>
+                    <option value="Mixed">Mixed</option>
+                </select>
+            </div>
 
-    <form id="answerKeyForm">
-      <label for="activityName">Activity Name:</label>
-      <input type="text" id="activityName" name="activityName" required placeholder="e.g., Puedo_Quiero">
+            <div class="form-group">
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" name="subject" required>
+            </div>
 
-      <div id="answersContainer">
-        <label>Answers:</label>
-        <div class="answer-item">
-          <input type="text" name="answers[]" placeholder="Answer 1" required>
-          <button type="button" class="remove-btn" onclick="removeAnswer(this)">×</button>
-        </div>
-      </div>
+            <div class="form-group">
+                <label for="grade_level">Grade Level:</label>
+                <input type="text" id="grade_level" name="grade_level" required>
+            </div>
 
-      <button type="button" id="addAnswer">+ Add Question</button>
-      <button type="submit">Save Answer Key</button>
-    </form>
+            <div class="questions-container" id="questionsContainer">
+                <h3 style="color: #667eea;">Questions & Answers</h3>
+                <div class="question-item">
+                    <div class="question-header">Question 1</div>
+                    <div class="form-group">
+                        <label>Question Text:</label>
+                        <textarea name="question_1" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Correct Answer:</label>
+                        <input type="text" name="answer_1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Points (optional):</label>
+                        <input type="number" name="points_1" value="1" min="0">
+                    </div>
+                </div>
+            </div>
 
-    <div id="message" class="message">✅ Saved successfully!</div>
-  </div>
+            <button type="button" class="add-question-btn" onclick="addQuestion()">+ Add Another Question</button>
 
-  <script>
-    const addAnswerBtn = document.getElementById('addAnswer');
-    const answersContainer = document.getElementById('answersContainer');
-    const activitySelect = document.getElementById('activitySelect');
-    const activityNameInput = document.getElementById('activityName');
-    const message = document.getElementById('message');
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxY1VpCNbAD_3csdFqxmT6NB3n5x67Y0yWZSauub_x_3h3SxMDjTk-nmj2Xcp4cmX4n2w/exec";
+            <button type="submit">Save Answer Key</button>
+        </form>
+    </div>
 
-    function removeAnswer(btn){ btn.parentElement.remove(); }
+    <script>
+        let questionCount = 1;
 
-    addAnswerBtn.addEventListener('click',()=>{
-      const div=document.createElement('div');
-      div.className='answer-item';
-      div.innerHTML=`
-        <input type="text" name="answers[]" placeholder="New Answer" required>
-        <button type="button" class="remove-btn" onclick="removeAnswer(this)">×</button>`;
-      answersContainer.appendChild(div);
-    });
+        function addQuestion() {
+            questionCount++;
+            const container = document.getElementById('questionsContainer');
+            
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question-item';
+            questionDiv.innerHTML = `
+                <div class="question-header">Question ${questionCount}</div>
+                <div class="form-group">
+                    <label>Question Text:</label>
+                    <textarea name="question_${questionCount}" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Correct Answer:</label>
+                    <input type="text" name="answer_${questionCount}" required>
+                </div>
+                <div class="form-group">
+                    <label>Points (optional):</label>
+                    <input type="number" name="points_${questionCount}" value="1" min="0">
+                </div>
+                <button type="button" class="remove-question-btn" onclick="removeQuestion(this)">Remove Question</button>
+            `;
+            
+            container.appendChild(questionDiv);
+        }
 
-    // 🟡 Load activity names
-    async function loadActivities(){
-      const res=await fetch(`${scriptURL}?action=getActivities`);
-      const list=await res.json();
-      list.forEach(name=>{
-        const opt=document.createElement('option');
-        opt.value=name; opt.textContent=name;
-        activitySelect.appendChild(opt);
-      });
-    }
+        function removeQuestion(button) {
+            button.parentElement.remove();
+        }
 
-    // 🟡 Load selected activity
-    activitySelect.addEventListener('change', async ()=>{
-      const name=activitySelect.value;
-      if(!name){ activityNameInput.value=""; answersContainer.innerHTML=""; addAnswerBtn.click(); return; }
-      const res=await fetch(`${scriptURL}?action=getAnswers&activity=${encodeURIComponent(name)}`);
-      const data=await res.json();
-      activityNameInput.value=name;
-      answersContainer.innerHTML="";
-      data.forEach((ans,i)=>{
-        const div=document.createElement('div');
-        div.className='answer-item';
-        div.innerHTML=`
-          <input type="text" name="answers[]" value="${ans}" placeholder="Answer ${i+1}" required>
-          <button type="button" class="remove-btn" onclick="removeAnswer(this)">×</button>`;
-        answersContainer.appendChild(div);
-      });
-    });
-
-document.getElementById('answerKeyForm').addEventListener('submit', async e => {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const formEntries = [];
-
-  for (const [key, value] of formData.entries()) {
-    formEntries.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
-  }
-
-  const body = formEntries.join("&");
-
-  try {
-    await fetch(scriptURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body,
-    });
-    message.style.display = 'block';
-    setTimeout(() => message.style.display = 'none', 3000);
-  } catch (err) {
-    alert("Error saving data");
-    console.error(err);
-  }
-});
-
-
-    loadActivities();
-  </script>
+        document.getElementById("answerKeyForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            // Add question count to form data
+            formData.append('question_count', questionCount);
+            
+            const params = new URLSearchParams(formData);
+            
+            // REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
+            const url = "https://script.google.com/macros/s/AKfycbzG6rWDKvLc3bfYxpSq4juTxwgQE8vK4M9eVaDhLI4o4NcaZ58aWi9sszEkZlAZIrISew/exec";
+            
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    mode: "no-cors",
+                    body: params
+                });
+                
+                form.reset();
+                questionCount = 1;
+                document.getElementById('questionsContainer').innerHTML = `
+                    <h3 style="color: #667eea;">Questions & Answers</h3>
+                    <div class="question-item">
+                        <div class="question-header">Question 1</div>
+                        <div class="form-group">
+                            <label>Question Text:</label>
+                            <textarea name="question_1" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Correct Answer:</label>
+                            <input type="text" name="answer_1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Points (optional):</label>
+                            <input type="number" name="points_1" value="1" min="0">
+                        </div>
+                    </div>
+                `;
+                
+                const msgContainer = document.getElementById("message-container");
+                msgContainer.innerHTML = '<div class="message">✅ Answer key saved successfully!</div>';
+                
+                setTimeout(() => {
+                    msgContainer.innerHTML = '';
+                }, 3000);
+            } catch (error) {
+                alert("There was an error saving the answer key. Please try again.");
+                console.error(error);
+            }
+        });
+    </script>
 </body>
 </html>
