@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Answer Key Manager</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex; flex-direction: column; align-items: center;
+    background: #f9f9f9; min-height: 100vh; margin: 0; padding: 2rem;
+  }
+  .title {
+    background-color: #667eea; color: white; font-size: 1.6rem; font-weight: bold;
+    padding: 1rem 2rem; border-radius: 0.5rem; margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  .form-container {
+    background: #fff; width: 90%; max-width: 850px; border: 1px solid #667eea;
+    border-radius: 1rem; box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    padding: 2rem; display: flex; flex-direction: column; gap: 1rem;
+  }
+  label { font-weight: 600; display: block; margin-bottom: 0.3rem; }
+  input, select {
+    width: 100%; padding: 0.7rem; font-size: 1rem;
+    border: 1px solid #ccc; border-radius: 5px;
+  }
+  button {
+    background-color: #4CAF50; color: #fff; border: none; border-radius: 6px;
+    padding: 0.8rem; font-size: 1rem; cursor: pointer;
+  }
+  button:hover { background-color: #45a049; }
+  .answer-item { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+  .remove-btn {
+    background: #e53e3e; color: white; border: none; border-radius: 4px;
+    padding: 0 10px; cursor: pointer; font-weight: bold;
+  }
+  .remove-btn:hover { background: #c53030; }
+  .message {
+    margin-top: 1rem; color: #155724; background: #d4edda; border: 1px solid #c3e6cb;
+    border-radius: 5px; padding: 0.75rem; text-align: center; display: none;
+  }
+</style>
+</head>
+<body>
+  <div class="title">Answer Key Manager</div>
+
+  <div class="form-container">
+    <label for="activitySelect">Select Existing Activity:</label>
+    <select id="activitySelect">
+      <option value="">— Create New —</option>
+    </select>
+
+    <form id="answerKeyForm">
+      <label for="activityName">Activity Name:</label>
+      <input type="text" id="activityName" name="activityName" required placeholder="e.g., Puedo_Quiero">
+
+      <div id="answersContainer">
+        <label>Answers:</label>
+        <div class="answer-item">
+          <input type="text" name="answers[]" placeholder="Answer 1" required>
+          <button type="button" class="remove-btn" onclick="removeAnswer(this)">×</button>
+        </div>
+      </div>
+
+      <button type="button" id="addAnswer">+ Add Question</button>
+      <button type="submit">Save Answer Key</button>
+    </form>
+
+    <div id="message" class="message">✅ Saved successfully!</div>
+  </div>
+
+  <script>
+    const addAnswerBtn = document.getElementById('addAnswer');
+    const answersContainer = document.getElementById('answersContainer');
+    const activitySelect = document.getElementById('activitySelect');
+    const activityNameInput = document.getElementById('activityName');
+    const message = document.getElementById('message');
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxY1VpCNbAD_3csdFqxmT6NB3n5x67Y0yWZSauub_x_3h3SxMDjTk-nmj2Xcp4cmX4n2w/exec";
+
+    function removeAnswer(btn){ btn.parentElement.remove(); }
+
+    addAnswerBtn.addEventListener('click',()=>{
+      const div=document.createElement('div');
+      div.className='answer-item';
+      div.innerHTML=`
+        <input type="text" name="answers[]" placeholder="New Answer" required>
+        <button type="button" class="remove-btn" onclick="removeAnswer(this)">×</button>`;
+      answersContainer.appendChild(div);
+    });
+
+    // 🟡 Load activity names
+    async function loadActivities(){
+      const res=await fetch(`${scriptURL}?action=getActivities`);
+      const list=await res.json();
+      list.forEach(name=>{
+        const opt=document.createElement('option');
+        opt.value=name; opt.textContent=name;
+        activitySelect.appendChild(opt);
+      });
+    }
+
+    // 🟡 Load selected activity
+    activitySelect.addEventListener('change', async ()=>{
+      const name=activitySelect.value;
+      if(!name){ activityNameInput.value=""; answersContainer.innerHTML=""; addAnswerBtn.click(); return; }
+      const res=await fetch(`${scriptURL}?action=getAnswers&activity=${encodeURIComponent(name)}`);
+      const data=await res.json();
+      activityNameInput.value=name;
+      answersContainer.innerHTML="";
+      data.forEach((ans,i)=>{
+        const div=document.createElement('div');
+        div.className='answer-item';
+        div.innerHTML=`
+          <input type="text" name="answers[]" value="${ans}" placeholder="Answer ${i+1}" required>
+          <button type="button" class="remove-btn" onclick="removeAnswer(this)">×</button>`;
+        answersContainer.appendChild(div);
+      });
+    });
+
+    // 🟢 Submit new or updated answer key
+    document.getElementById('answerKeyForm').addEventListener('submit', async e=>{
+      e.preventDefault();
+      const formData=new FormData(e.target);
+      const params=new URLSearchParams(formData);
+      try{
+        await fetch(scriptURL,{method:"POST",mode:"no-cors",body:params});
+        message.style.display='block';
+        setTimeout(()=>message.style.display='none',3000);
+      }catch(err){ alert('Error saving data'); console.error(err);}
+    });
+
+    loadActivities();
+  </script>
+</body>
+</html>
