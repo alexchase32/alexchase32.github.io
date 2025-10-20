@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Activity Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: #1a1a1a;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #a0a0a0;
+            font-size: 0.95rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .activity-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 1rem;
+        }
+
+        .activity-tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .activity-tab.active {
+            color: #1a1a1a;
+            border-bottom-color: #1a1a1a;
+        }
+
+        .activity-tab:hover {
+            color: #1a1a1a;
+        }
+
+        .activity-panel {
+            display: none;
+        }
+
+        .activity-panel.active {
+            display: block;
+        }
+
+        .form-section {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #1a1a1a;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .question-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .answer-group {
+            margin-top: 0.75rem;
+        }
+
+        .answer-input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+
+        .answer-input-group input[type="text"] {
+            flex: 1;
+        }
+
+        .answer-input-group input[type="radio"] {
+            margin: 0 0.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1a1a1a;
+            border: 1px solid #d0d0d0;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .sentence-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .sentence-inputs {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .output-section {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .download-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .download-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: white;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #1a1a1a;
+            transition: all 0.2s;
+        }
+
+        .download-link:hover {
+            border-color: #1a1a1a;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .status-message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .remove-btn:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Learning Activity Generator</h1>
+        <p>Create SCORM-compliant listening and writing activities</p>
+    </div>
+
+    <div class="container">
+        <div class="activity-selector">
+            <button class="activity-tab active" data-activity="listening">Listening Activity</button>
+            <button class="activity-tab" data-activity="writing">Writing Activity</button>
+            <button class="activity-tab" data-activity="dialogue">Dialogue Activity</button>
+            <button class="activity-tab" data-activity="speaking">Speaking Activity</button>
+            <button class="activity-tab" data-activity="wordclick">Word Click Activity</button>
+        </div>
+
+        <!-- Listening Activity Form -->
+        <div id="listening-panel" class="activity-panel active">
+            <div class="form-section">
+                <h3>Import from JSON (Optional)</h3>
+                <div class="form-group">
+                    <label for="listening-json-import">Paste JSON data to auto-populate fields</label>
+                    <textarea id="listening-json-import" placeholder='{"title": "My Activity", "description": "Instructions", "questions": [{"question": "What is...?", "answers": ["A", "B", "C", "D"], "correct": 0}]}' style="min-height: 120px;"></textarea>
+                </div>
+                <button class="btn btn-secondary btn-small" onclick="importListeningJSON()">Import JSON</button>
+            </div>
+
+            <div class="form-section">
+                <h3>Activity Settings</h3>
+                <div class="form-group">
+                    <label for="listening-title">Activity Title</label>
+                    <input type="text" id="listening-title" placeholder="Audio Learning Activity" value="Audio Learning Activity">
+                </div>
+                <div class="form-group">
+                    <label for="listening-description">Description</label>
+                    <textarea id="listening-description" placeholder="Your teacher will read the questions aloud">Your teacher will read the questions aloud</textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Questions</h3>
+                <div id="questions-container"></div>
+                <button class="btn btn-secondary btn-small" onclick="addListeningQuestion()">+ Add Question</button>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="generateListeningActivity()">Generate Activity</button>
+            </div>
+
+            <div id="listening-output" class="output-section" style="display: none;">
+                <h3>Generated Files</h3>
+                <div class="download-links" id="listening-downloads"></div>
+            </div>
+        </div>
+
+        <!-- Writing Activity Form -->
+        <div id="writing-panel" class="activity-panel">
+            <div class="form-section">
+                <h3>Import from JSON (Optional)</h3>
+                <div class="form-group">
+                    <label for="writing-json-import">Paste JSON data to auto-populate fields</label>
+                    <textarea id="writing-json-import" placeholder='{"title": "Spanish Practice", "specialChars": ["á","é","í"], "sentences": ["yo jugaba", "él corría"], "prompts": ["yo (jugar)", "él (correr)"]}' style="min-height: 120px;"></textarea>
+                </div>
+                <button class="btn btn-secondary btn-small" onclick="importWritingJSON()">Import JSON</button>
+            </div>
+
+            <div class="form-section">
+                <h3>Activity Settings</h3>
+                <div class="form-group">
+                    <label for="writing-title">Activity Title</label>
+                    <input type="text" id="writing-title" placeholder="Spanish Sentence Practice" value="Spanish Sentence Practice">
+                </div>
+                <div class="form-group">
+                    <label for="special-chars">Special Characters (comma-separated)</label>
+                    <input type="text" id="special-chars" placeholder="á,é,í,ó,ú,¿,?,¡,!,ü" value="á,é,í,ó,ú,¿,?,¡,!,ü">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Sentences</h3>
+                <div id="sentences-container"></div>
+                <button class="btn btn-secondary btn-small" onclick="addWritingSentence()">+ Add Sentence</button>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="generateWritingActivity()">Generate Activity</button>
+            </div>
+
+            <div id="writing-output" class="output-section" style="display: none;">
+                <h3>Generated Files</h3>
+                <div class="download-links" id="writing-downloads"></div>
+            </div>
+        </div>
+
+        <!-- Dialogue Activity Form -->
+        <div id="dialogue-panel" class="activity-panel">
+            <div class="form-section">
+                <h3>Import from JSON (Optional)</h3>
+                <div class="form-group">
+                    <label for="dialogue-json-import">Paste JSON data to auto-populate fields</label>
+                    <textarea id="dialogue-json-import" placeholder='{"title": "Spanish Dialogue", "dialogues": [{"lines": [{"text": "Hola", "person": 1}, {"text": "Hola", "person": 2}], "questions": [{"text": "¿Qué dice?", "choices": ["Hola", "Adiós", "Gracias"], "correct": 0}]}]}' style="min-height: 120px;"></textarea>
+                </div>
+                <button class="btn btn-secondary btn-small" onclick="importDialogueJSON()">Import JSON</button>
+            </div>
+
+            <div class="form-section">
+                <h3>Activity Settings</h3>
+                <div class="form-group">
+                    <label for="dialogue-title">Activity Title</label>
+                    <input type="text" id="dialogue-title" placeholder="Interactive Spanish Dialogue Learning" value="Interactive Spanish Dialogue Learning">
+                </div>
+                <div class="form-group">
+                    <label for="timer-duration">Timer Duration (seconds)</label>
+                    <input type="number" id="timer-duration" placeholder="300" value="300" min="30">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Dialogue Exercises</h3>
+                <div id="dialogues-container"></div>
+                <button class="btn btn-secondary btn-small" onclick="addDialogueExercise()">+ Add Dialogue Exercise</button>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="generateDialogueActivity()">Generate Activity</button>
+            </div>
+
+            <div id="dialogue-output" class="output-section" style="display: none;">
+                <h3>Generated Files</h3>
+                <div class="download-links" id="dialogue-downloads"></div>
+            </div>
+        </div>
+
+        <!-- Speaking Activity Form -->
+        <div id="speaking-panel" class="activity-panel">
+            <div class="form-section">
+                <h3>Import from JSON (Optional)</h3>
+                <div class="form-group">
+                    <label for="speaking-json-import">Paste JSON data to auto-populate fields</label>
+                    <textarea id="speaking-json-import" placeholder='{"title": "Speaking Activity", "timerDuration": 300, "exercises": [{"instructions": "Person asks...", "image": "dialogue1.jpg", "dialogue": [{"side": "left", "answers": ["sabes nadar"]}]}]}' style="min-height: 120px;"></textarea>
+                </div>
+                <button class="btn btn-secondary btn-small" onclick="importSpeakingJSON()">Import JSON</button>
+            </div>
+
+            <div class="form-section">
+                <h3>Activity Settings</h3>
+                <div class="form-group">
+                    <label for="speaking-title">Activity Title</label>
+                    <input type="text" id="speaking-title" placeholder="Interactive Speaking Activity" value="Interactive Speaking Activity">
+                </div>
+                <div class="form-group">
+                    <label for="speaking-timer-duration">Timer Duration (seconds)</label>
+                    <input type="number" id="speaking-timer-duration" placeholder="300" value="300" min="30">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Speaking Exercises</h3>
+                <div id="speaking-exercises-container"></div>
+                <button class="btn btn-secondary btn-small" onclick="addSpeakingExercise()">+ Add Exercise</button>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="generateSpeakingActivity()">Generate Activity</button>
+            </div>
+
+            <div id="speaking-output" class="output-section" style="display: none;">
+                <h3>Generated Files</h3>
+                <div class="download-links" id="speaking-downloads"></div>
+            </div>
+        </div>
+
+        <!-- Word Click Activity Form -->
+        <div id="wordclick-panel" class="activity-panel">
+            <div class="form-section">
+                <h3>Import from JSON (Optional)</h3>
+                <div class="form-group">
+                    <label for="wordclick-json-import">Paste JSON data to auto-populate fields</label>
+                    <textarea id="wordclick-json-import" placeholder='{"title": "Word Click Activity", "timerDuration": 300, "exercises": [{"sentence": "Cuando yo {iba} pequeña, {fui} a la casa.", "verbs": [{"text": "iba", "options": ["iba","fui","era"], "correct": "era"}, {"text": "fui", "options": ["fui","iba","era"], "correct": "iba"}]}]}' style="min-height: 120px;"></textarea>
+                </div>
+                <button class="btn btn-secondary btn-small" onclick="importWordClickJSON()">Import JSON</button>
+            </div>
+
+            <div class="form-section">
+                <h3>Activity Settings</h3>
+                <div class="form-group">
+                    <label for="wordclick-title">Activity Title</label>
+                    <input type="text" id="wordclick-title" placeholder="Word Click Activity" value="Word Click Activity">
+                </div>
+                <div class="form-group">
+                    <label for="wordclick-timer-duration">Timer Duration (seconds)</label>
+                    <input type="number" id="wordclick-timer-duration" placeholder="300" value="300" min="30">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Exercises</h3>
+                <div id="wordclick-exercises-container"></div>
+                <button class="btn btn-secondary btn-small" onclick="addWordClickExercise()">+ Add Exercise</button>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="generateWordClickActivity()">Generate Activity</button>
+            </div>
+
+            <div id="wordclick-output" class="output-section" style="display: none;">
+                <h3>Generated Files</h3>
+                <div class="download-links" id="wordclick-downloads"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.activity-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.activity-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.activity-panel').forEach(p => p.classList.remove('active'));
+                
+                tab.classList.add('active');
+                const activity = tab.dataset.activity;
+                document.getElementById(`${activity}-panel`).classList.add('active');
+            });
+        });
+
+        let listeningQuestionCount = 0;
+        let writingSentenceCount = 0;
+        let dialogueExerciseCount = 0;
+        let speakingExerciseCount = 0;
+        let wordClickExerciseCount = 0;
+
+        // Initialize with sample data
+        window.addEventListener('load', () => {
+            // Add sample listening questions
+            addListeningQuestion();
+            addListeningQuestion();
+            
+            // Add sample writing sentences
+            addWritingSentence();
+            addWritingSentence();
+            
+            // Add sample dialogue exercise
+            addDialogueExercise();
+            
+            // Add sample speaking exercise
+            addSpeakingExercise();
+            
+            // Add sample word click exercise
+            addWordClickExercise();
+        });
+
+        function addListeningQuestion() {
+            const container = document.getElementById('questions-container');
+            const index = listeningQuestionCount++;
+            
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question-item';
+            questionDiv.innerHTML = `
+                <div class="form-group">
+                    <label>Question ${index + 1}</label>
+                    <input type="text" class="question-text" placeholder="Enter question text">
+                </div>
+                <div class="answer-group">
+                    <label>Answer Options (select correct answer)</label>
+                    ${[0, 1, 2, 3].map(i => `
+                        <div class="answer-input-group">
+                            <input type="radio" name="correct-${index}" value="${i}" ${i === 0 ? 'checked' : ''}>
+                            <input type="text" class="answer-text" placeholder="Answer ${i + 1}">
+                        </div>
+                    `).join('')}
+                </div>
+                <button class="remove-btn" onclick="this.parentElement.remove()">Remove Question</button>
+            `;
+            
+            container.appendChild(questionDiv);
+        }
+
+        function addWritingSentence() {
+            const container = document.getElementById('sentences-container');
+            const index = writingSentenceCount++;
+            
+            const sentenceDiv = document.createElement('div');
+            sentenceDiv.className = 'sentence-item';
+            sentenceDiv.innerHTML = `
+                <div class="sentence-inputs">
+                    <div class="form-group">
+                        <label>Sentence ${index + 1} - Expected Answer</label>
+                        <input type="text" class="expected-sentence" placeholder="yo jugaba mientras llovía">
+                    </div>
+                    <div class="form-group">
+                        <label>Display Prompt (with infinitives in parentheses)</label>
+                        <input type="text" class="prompt-sentence" placeholder="yo (jugar) mientras (llover)">
+                    </div>
+                </div>
+                <button class="remove-btn" onclick="this.parentElement.remove()">Remove Sentence</button>
+            `;
+            
+            container.appendChild(sentenceDiv);
+        }
+
+        function addDialogueExercise() {
+            const container = document.getElementById('dialogues-container');
+            const index = dialogueExerciseCount++;
+            
+            const dialogueDiv = document.createElement('div');
+            dialogueDiv.className = 'question-item';
+            dialogueDiv.style.marginBottom = '2rem';
+            dialogueDiv.innerHTML = `
+                <h4 style="margin-bottom: 1rem;">Dialogue Exercise ${index + 1}</h4>
+                
+                <div class="form-group">
+                    <label>Dialogue Lines</label>
+                    <div class="dialogue-lines-container" data-index="${index}">
+                        <div class="answer-input-group" style="margin-bottom: 0.5rem;">
+                            <select style="width: 100px; padding: 0.75rem; border: 1px solid #d0d0d0; border-radius: 6px;">
+                                <option value="1">Person 1</option>
+                                <option value="2">Person 2</option>
+                            </select>
+                            <input type="text" class="dialogue-line-text" placeholder="Enter dialogue line" style="flex: 1;">
+                        </div>
+                        <div class="answer-input-group" style="margin-bottom: 0.5rem;">
+                            <select style="width: 100px; padding: 0.75rem; border: 1px solid #d0d0d0; border-radius: 6px;">
+                                <option value="1">Person 1</option>
+                                <option value="2" selected>Person 2</option>
+                            </select>
+                            <input type="text" class="dialogue-line-text" placeholder="Enter dialogue line" style="flex: 1;">
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-small" onclick="addDialogueLine(${index})" style="margin-top: 0.5rem;">+ Add Line</button>
+                </div>
+                
+                <div class="form-group" style="margin-top: 1.5rem;">
+                    <label>Questions</label>
+                    <div class="dialogue-questions-container" data-index="${index}">
+                        <div style="background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;">
+                            <input type="text" class="question-text" placeholder="Question text" style="margin-bottom: 0.5rem;">
+                            <div class="answer-input-group">
+                                <input type="radio" name="correct-d${index}-q0" value="0" checked>
+                                <input type="text" class="answer-text" placeholder="Choice 1">
+                            </div>
+                            <div class="answer-input-group">
+                                <input type="radio" name="correct-d${index}-q0" value="1">
+                                <input type="text" class="answer-text" placeholder="Choice 2">
+                            </div>
+                            <div class="answer-input-group">
+                                <input type="radio" name="correct-d${index}-q0" value="2">
+                                <input type="text" class="answer-text" placeholder="Choice 3">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-small" onclick="addDialogueQuestion(${index})">+ Add Question</button>
+                </div>
+                
+                <button class="remove-btn" onclick="this.parentElement.remove()">Remove Exercise</button>
+            `;
+            
+            container.appendChild(dialogueDiv);
+        }
+
+        function addDialogueLine(exerciseIndex) {
+            const container = document.querySelector(`.dialogue-lines-container[data-index="${exerciseIndex}"]`);
+            const lineDiv = document.createElement('div');
+            lineDiv.className = 'answer-input-group';
+            lineDiv.style.marginBottom = '0.5rem';
+            lineDiv.innerHTML = `
+                <select style="width: 100px; padding: 0.75rem; border: 1px solid #d0d0d0; border-radius: 6px;">
+                    <option value="1">Person 1</option>
+                    <option value="2">Person 2</option>
+                </select>
+                <input type="text" class="dialogue-line-text" placeholder="Enter dialogue line" style="flex: 1;">
+                <button class="remove-btn" onclick="this.parentElement.remove()" style="width: auto; padding: 0.5rem;">×</button>
+            `;
+            container.appendChild(lineDiv);
+        }
+
+        function addDialogueQuestion(exerciseIndex) {
+            const container = document.querySelector(`.dialogue-questions-container[data-index="${exerciseIndex}"]`);
+            const questionCount = container.querySelectorAll('div > input.question-text').length;
+            const questionDiv = document.createElement('div');
+            questionDiv.style.cssText = 'background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;';
+            questionDiv.innerHTML = `
+                <input type="text" class="question-text" placeholder="Question text" style="margin-bottom: 0.5rem;">
+                <div class="answer-input-group">
+                    <input type="radio" name="correct-d${exerciseIndex}-q${questionCount}" value="0" checked>
+                    <input type="text" class="answer-text" placeholder="Choice 1">
+                </div>
+                <div class="answer-input-group">
+                    <input type="radio" name="correct-d${exerciseIndex}-q${questionCount}" value="1">
+                    <input type="text" class="answer-text" placeholder="Choice 2">
+                </div>
+                <div class="answer-input-group">
+                    <input type="radio" name="correct-d${exerciseIndex}-q${questionCount}" value="2">
+                    <input type="text" class="answer-text" placeholder="Choice 3">
+                </div>
+                <button class="remove-btn" onclick="this.parentElement.remove()" style="margin-top: 0.5rem;">Remove Question</button>
+            `;
+            container.appendChild(questionDiv);
+        }
+
+        function addSpeakingExercise() {
+            const container = document.getElementById('speaking-exercises-container');
+            const index = speakingExerciseCount++;
+            
+            const exerciseDiv = document.createElement('div');
+            exerciseDiv.className = 'question-item';
+            exerciseDiv.style.marginBottom = '2rem';
+            exerciseDiv.innerHTML = `
+                <h4 style="margin-bottom: 1rem;">Exercise ${index + 1}</h4>
+                
+                <div class="form-group">
+                    <label>Instructions</label>
+                    <textarea class="exercise-instructions" placeholder="Describe the dialogue scenario" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Image Filename (optional)</label>
+                    <input type="text" class="exercise-image" placeholder="dialogue1.jpg">
+                </div>
+                
+                <div class="form-group">
+                    <label>Dialogue Parts</label>
+                    <div class="speaking-dialogue-container" data-index="${index}">
+                        <div style="background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;">
+                            <label style="font-size: 0.9rem;">Speaker Position</label>
+                            <select class="dialogue-side" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px; margin-bottom: 0.5rem;">
+                                <option value="left">Left</option>
+                                <option value="right">Right</option>
+                            </select>
+                            <label style="font-size: 0.9rem;">Acceptable Answers (one per line)</label>
+                            <textarea class="dialogue-answers" placeholder="sabes nadar&#10;puedes nadar" rows="3" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px;"></textarea>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-small" onclick="addSpeakingDialoguePart(${index})" style="margin-top: 0.5rem;">+ Add Dialogue Part</button>
+                </div>
+                
+                <button class="remove-btn" onclick="this.parentElement.remove()">Remove Exercise</button>
+            `;
+            
+            container.appendChild(exerciseDiv);
+        }
+
+        function addSpeakingDialoguePart(exerciseIndex) {
+            const container = document.querySelector(`.speaking-dialogue-container[data-index="${exerciseIndex}"]`);
+            const partDiv = document.createElement('div');
+            partDiv.style.cssText = 'background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;';
+            partDiv.innerHTML = `
+                <label style="font-size: 0.9rem;">Speaker Position</label>
+                <select class="dialogue-side" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px; margin-bottom: 0.5rem;">
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                </select>
+                <label style="font-size: 0.9rem;">Acceptable Answers (one per line)</label>
+                <textarea class="dialogue-answers" placeholder="sabes nadar&#10;puedes nadar" rows="3" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px;"></textarea>
+                <button class="remove-btn" onclick="this.parentElement.remove()" style="margin-top: 0.5rem;">Remove Part</button>
+            `;
+            container.appendChild(partDiv);
+        }
+
+        function addWordClickExercise() {
+            const container = document.getElementById('wordclick-exercises-container');
+            const index = wordClickExerciseCount++;
+            
+            const exerciseDiv = document.createElement('div');
+            exerciseDiv.className = 'question-item';
+            exerciseDiv.style.marginBottom = '2rem';
+            exerciseDiv.innerHTML = `
+                <h4 style="margin-bottom: 1rem;">Exercise ${index + 1}</h4>
+                
+                <div class="form-group">
+                    <label>Sentence (use {word} to mark clickable verbs)</label>
+                    <textarea class="exercise-sentence" placeholder="Cuando yo {iba} pequeña, {fui} a la casa." rows="2"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Verb Options</label>
+                    <div class="wordclick-verbs-container" data-index="${index}">
+                        <div style="background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;">
+                            <label style="font-size: 0.9rem;">Verb Text (as it appears in sentence)</label>
+                            <input type="text" class="verb-text" placeholder="iba" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px; margin-bottom: 0.5rem;">
+                            <label style="font-size: 0.9rem;">Options (comma-separated)</label>
+                            <input type="text" class="verb-options" placeholder="iba,fui,era" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px; margin-bottom: 0.5rem;">
+                            <label style="font-size: 0.9rem;">Correct Answer</label>
+                            <input type="text" class="verb-correct" placeholder="era" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px;">
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-small" onclick="addWordClickVerb(${index})" style="margin-top: 0.5rem;">+ Add Verb</button>
+                </div>
+                
+                <button class="remove-btn" onclick="this.parentElement.remove()">Remove Exercise</button>
+            `;
+            
+            container.appendChild(exerciseDiv);
+        }
+
+        function addWordClickVerb(exerciseIndex) {
+            const container = document.querySelector(`.wordclick-verbs-container[data-index="${exerciseIndex}"]`);
+            const verbDiv = document.createElement('div');
+            verbDiv.style.cssText = 'background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;';
+            verbDiv.innerHTML = `
+                <label style="font-size: 0.9rem;">Verb Text (as it appears in sentence)</label>
+                <input type="text" class="verb-text" placeholder="iba" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px; margin-bottom: 0.5rem;">
+                <label style="font-size: 0.9rem;">Options (comma-separated)</label>
+                <input type="text" class="verb-options" placeholder="iba,fui,era" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px; margin-bottom: 0.5rem;">
+                <label style="font-size: 0.9rem;">Correct Answer</label>
+                <input type="text" class="verb-correct" placeholder="era" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px;">
+                <button class="remove-btn" onclick="this.parentElement.remove()" style="margin-top: 0.5rem;">Remove Verb</button>
+            `;
+            container.appendChild(verbDiv);
+        }
+
+        function importListeningJSON() {
+            const jsonInput = document.getElementById('listening-json-import');
+            try {
+                const data = JSON.parse(jsonInput.value);
+                
+                // Clear existing questions
+                document.getElementById('questions-container').innerHTML = '';
+                listeningQuestionCount = 0;
+                
+                // Populate title and description
+                if (data.title) {
+                    document.getElementById('listening-title').value = data.title;
+                }
+                if (data.description) {
+                    document.getElementById('listening-description').value = data.description;
+                }
+                
+                // Populate questions
+                if (data.questions && Array.isArray(data.questions)) {
+                    data.questions.forEach((q, index) => {
+                        addListeningQuestion();
+                        const questionItem = document.querySelectorAll('#questions-container .question-item')[index];
+                        
+                        if (q.question) {
+                            questionItem.querySelector('.question-text').value = q.question;
+                        }
+                        
+                        if (q.answers && Array.isArray(q.answers)) {
+                            const answerInputs = questionItem.querySelectorAll('.answer-text');
+                            q.answers.forEach((answer, i) => {
+                                if (answerInputs[i]) {
+                                    answerInputs[i].value = answer;
+                                }
+                            });
+                        }
+                        
+                        if (typeof q.correct === 'number') {
+                            const radio = questionItem.querySelector(`input[type="radio"][value="${q.correct}"]`);
+                            if (radio) radio.checked = true;
+                        }
+                    });
+                }
+                
+                jsonInput.value = '';
+                alert('JSON imported successfully!');
+            } catch (error) {
+                alert('Invalid JSON format: ' + error.message);
+            }
+        }
+
+        function importWritingJSON() {
+            const jsonInput = document.getElementById('writing-json-import');
+            try {
+                const data = JSON.parse(jsonInput.value);
+                
+                // Clear existing sentences
+                document.getElementById('sentences-container').innerHTML = '';
+                writingSentenceCount = 0;
+                
+                // Populate title
+                if (data.title) {
+                    document.getElementById('writing-title').value = data.title;
+                }
+                
+                // Populate special characters
+                if (data.specialChars && Array.isArray(data.specialChars)) {
+                    document.getElementById('special-chars').value = data.specialChars.join(',');
+                }
+                
+                // Populate sentences
+                if (data.sentences && Array.isArray(data.sentences)) {
+                    const prompts = data.prompts || [];
+                    data.sentences.forEach((sentence, index) => {
+                        addWritingSentence();
+                        const sentenceItem = document.querySelectorAll('#sentences-container .sentence-item')[index];
+                        
+                        sentenceItem.querySelector('.expected-sentence').value = sentence;
+                        if (prompts[index]) {
+                            sentenceItem.querySelector('.prompt-sentence').value = prompts[index];
+                        }
+                    });
+                }
+                
+                jsonInput.value = '';
+                alert('JSON imported successfully!');
+            } catch (error) {
+                alert('Invalid JSON format: ' + error.message);
+            }
+        }
+
+        function importDialogueJSON() {
+            const jsonInput = document.getElementById('dialogue-json-import');
+            try {
+                const data = JSON.parse(jsonInput.value);
+                
+                document.getElementById('dialogues-container').innerHTML = '';
+                dialogueExerciseCount = 0;
+                
+                if (data.title) {
+                    document.getElementById('dialogue-title').value = data.title;
+                }
+                if (data.timerDuration) {
+                    document.getElementById('timer-duration').value = data.timerDuration;
+                }
+                
+                if (data.dialogues && Array.isArray(data.dialogues)) {
+                    data.dialogues.forEach((dialogue, dIndex) => {
+                        addDialogueExercise();
+                        const exerciseDiv = document.querySelectorAll('#dialogues-container .question-item')[dIndex];
+                        
+                        if (dialogue.lines && Array.isArray(dialogue.lines)) {
+                            const linesContainer = exerciseDiv.querySelector('.dialogue-lines-container');
+                            linesContainer.innerHTML = '';
+                            dialogue.lines.forEach(line => {
+                                const lineDiv = document.createElement('div');
+                                lineDiv.className = 'answer-input-group';
+                                lineDiv.style.marginBottom = '0.5rem';
+                                lineDiv.innerHTML = `
+                                    <select style="width: 100px; padding: 0.75rem; border: 1px solid #d0d0d0; border-radius: 6px;">
+                                        <option value="1" ${line.person === 1 ? 'selected' : ''}>Person 1</option>
+                                        <option value="2" ${line.person === 2 ? 'selected' : ''}>Person 2</option>
+                                    </select>
+                                    <input type="text" class="dialogue-line-text" placeholder="Enter dialogue line" style="flex: 1;" value="${line.text}">
+                                    <button class="remove-btn" onclick="this.parentElement.remove()" style="width: auto; padding: 0.5rem;">×</button>
+                                `;
+                                linesContainer.appendChild(lineDiv);
+                            });
+                        }
+                        
+                        if (dialogue.questions && Array.isArray(dialogue.questions)) {
+                            const questionsContainer = exerciseDiv.querySelector('.dialogue-questions-container');
+                            questionsContainer.innerHTML = '';
+                            dialogue.questions.forEach((q, qIndex) => {
+                                const questionDiv = document.createElement('div');
+                                questionDiv.style.cssText = 'background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;';
+                                questionDiv.innerHTML = `
+                                    <input type="text" class="question-text" placeholder="Question text" style="margin-bottom: 0.5rem;" value="${q.text}">
+                                    ${q.choices.map((choice, cIndex) => `
+                                        <div class="answer-input-group">
+                                            <input type="radio" name="correct-d${dIndex}-q${qIndex}" value="${cIndex}" ${cIndex === q.correct ? 'checked' : ''}>
+                                            <input type="text" class="answer-text" placeholder="Choice ${cIndex + 1}" value="${choice}">
+                                        </div>
+                                    `).join('')}
+                                    <button class="remove-btn" onclick="this.parentElement.remove()" style="margin-top: 0.5rem;">Remove Question</button>
+                                `;
+                                questionsContainer.appendChild(questionDiv);
+                            });
+                        }
+                    });
+                }
+                
+                jsonInput.value = '';
+                alert('JSON imported successfully!');
+            } catch (error) {
+                alert('Invalid JSON format: ' + error.message);
+            }
+        }
+
+        function importSpeakingJSON() {
+            const jsonInput = document.getElementById('speaking-json-import');
+            try {
+                const data = JSON.parse(jsonInput.value);
+                
+                document.getElementById('speaking-exercises-container').innerHTML = '';
+                speakingExerciseCount = 0;
+                
+                if (data.title) {
+                    document.getElementById('speaking-title').value = data.title;
+                }
+                if (data.timerDuration) {
+                    document.getElementById('speaking-timer-duration').value = data.timerDuration;
+                }
+                
+                if (data.exercises && Array.isArray(data.exercises)) {
+                    data.exercises.forEach((exercise, eIndex) => {
+                        addSpeakingExercise();
+                        const exerciseDiv = document.querySelectorAll('#speaking-exercises-container .question-item')[eIndex];
+                        
+                        if (exercise.instructions) {
+                            exerciseDiv.querySelector('.exercise-instructions').value = exercise.instructions;
+                        }
+                        if (exercise.image) {
+                            exerciseDiv.querySelector('.exercise-image').value = exercise.image;
+                        }
+                        
+                        if (exercise.dialogue && Array.isArray(exercise.dialogue)) {
+                            const dialogueContainer = exerciseDiv.querySelector('.speaking-dialogue-container');
+                            dialogueContainer.innerHTML = '';
+                            exercise.dialogue.forEach(part => {
+                                const partDiv = document.createElement('div');
+                                partDiv.style.cssText = 'background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;';
+                                const answersText = part.answers ? part.answers.join('\n') : '';
+                                partDiv.innerHTML = `
+                                    <label style="font-size: 0.9rem;">Speaker Position</label>
+                                    <select class="dialogue-side" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px; margin-bottom: 0.5rem;">
+                                        <option value="left" ${part.side === 'left' ? 'selected' : ''}>Left</option>
+                                        <option value="right" ${part.side === 'right' ? 'selected' : ''}>Right</option>
+                                    </select>
+                                    <label style="font-size: 0.9rem;">Acceptable Answers (one per line)</label>
+                                    <textarea class="dialogue-answers" placeholder="sabes nadar&#10;puedes nadar" rows="3" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px;">${answersText}</textarea>
+                                    <button class="remove-btn" onclick="this.parentElement.remove()" style="margin-top: 0.5rem;">Remove Part</button>
+                                `;
+                                dialogueContainer.appendChild(partDiv);
+                            });
+                        }
+                    });
+                }
+                
+                jsonInput.value = '';
+                alert('JSON imported successfully!');
+            } catch (error) {
+                alert('Invalid JSON format: ' + error.message);
+            }
+        }
+
+        function importWordClickJSON() {
+            const jsonInput = document.getElementById('wordclick-json-import');
+            try {
+                const data = JSON.parse(jsonInput.value);
+                
+                document.getElementById('wordclick-exercises-container').innerHTML = '';
+                wordClickExerciseCount = 0;
+                
+                if (data.title) {
+                    document.getElementById('wordclick-title').value = data.title;
+                }
+                if (data.timerDuration) {
+                    document.getElementById('wordclick-timer-duration').value = data.timerDuration;
+                }
+                
+                if (data.exercises && Array.isArray(data.exercises)) {
+                    data.exercises.forEach((exercise, eIndex) => {
+                        addWordClickExercise();
+                        const exerciseDiv = document.querySelectorAll('#wordclick-exercises-container .question-item')[eIndex];
+                        
+                        if (exercise.sentence) {
+                            exerciseDiv.querySelector('.exercise-sentence').value = exercise.sentence;
+                        }
+                        
+                        if (exercise.verbs && Array.isArray(exercise.verbs)) {
+                            const verbsContainer = exerciseDiv.querySelector('.wordclick-verbs-container');
+                            verbsContainer.innerHTML = '';
+                            exercise.verbs.forEach(verb => {
+                                const verbDiv = document.createElement('div');
+                                verbDiv.style.cssText = 'background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;';
+                                const optionsText = verb.options ? verb.options.join(',') : '';
+                                verbDiv.innerHTML = `
+                                    <label style="font-size: 0.9rem;">Verb Text (as it appears in sentence)</label>
+                                    <input type="text" class="verb-text" placeholder="iba" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px; margin-bottom: 0.5rem;" value="${verb.text || ''}">
+                                    <label style="font-size: 0.9rem;">Options (comma-separated)</label>
+                                    <input type="text" class="verb-options" placeholder="iba,fui,era" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px; margin-bottom: 0.5rem;" value="${optionsText}">
+                                    <label style="font-size: 0.9rem;">Correct Answer</label>
+                                    <input type="text" class="verb-correct" placeholder="era" style="width: 100%; padding: 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px;" value="${verb.correct || ''}">
+                                    <button class="remove-btn" onclick="this.parentElement.remove()" style="margin-top: 0.5rem;">Remove Verb</button>
+                                `;
+                                verbsContainer.appendChild(verbDiv);
+                            });
+                        }
+                    });
+                }
+                
+                jsonInput.value = '';
+                alert('JSON imported successfully!');
+            } catch (error) {
+                alert('Invalid JSON format: ' + error.message);
+            }
+        }
+
+        async function generateListeningActivity() {
+            const title = document.getElementById('listening-title').value;
+            const description = document.getElementById('listening-description').value;
+            
+            const questions = [];
+            document.querySelectorAll('#questions-container .question-item').forEach((item, index) => {
+                const questionText = item.querySelector('.question-text').value;
+                const answers = Array.from(item.querySelectorAll('.answer-text')).map(input => input.value);
+                const correctIndex = parseInt(item.querySelector('input[type="radio"]:checked').value);
+                
+                questions.push({
+                    question: questionText,
+                    answers: answers,
+                    correct: correctIndex
+                });
+            });
+
+            if (questions.length === 0) {
+                alert('Please add at least one question');
+                return;
+            }
+
+            try {
+                const response = await fetch('handler.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'generate_listening',
+                        title: title,
+                        description: description,
+                        questions: questions
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayListeningOutputs(result.files);
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error generating activity: ' + error.message);
+            }
+        }
+
+        async function generateWritingActivity() {
+            const title = document.getElementById('writing-title').value;
+            const specialChars = document.getElementById('special-chars').value.split(',').map(s => s.trim());
+            
+            const sentences = [];
+            const prompts = [];
+            
+            document.querySelectorAll('#sentences-container .sentence-item').forEach(item => {
+                const expected = item.querySelector('.expected-sentence').value;
+                const prompt = item.querySelector('.prompt-sentence').value;
+                
+                sentences.push(expected);
+                prompts.push(prompt);
+            });
+
+            if (sentences.length === 0) {
+                alert('Please add at least one sentence');
+                return;
+            }
+
+            try {
+                const response = await fetch('handler.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'generate_writing',
+                        title: title,
+                        specialChars: specialChars,
+                        sentences: sentences,
+                        prompts: prompts
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayWritingOutputs(result.files);
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error generating activity: ' + error.message);
+            }
+        }
+
+        async function generateDialogueActivity() {
+            const title = document.getElementById('dialogue-title').value;
+            const timerDuration = parseInt(document.getElementById('timer-duration').value) || 300;
+            
+            const dialogues = [];
+            document.querySelectorAll('#dialogues-container .question-item').forEach((item, index) => {
+                const lines = [];
+                item.querySelectorAll('.dialogue-lines-container .answer-input-group').forEach(lineDiv => {
+                    const person = parseInt(lineDiv.querySelector('select').value);
+                    const text = lineDiv.querySelector('.dialogue-line-text').value;
+                    if (text) {
+                        lines.push({ text, person });
+                    }
+                });
+                
+                const questions = [];
+                item.querySelectorAll('.dialogue-questions-container > div').forEach((qDiv, qIndex) => {
+                    const questionText = qDiv.querySelector('.question-text').value;
+                    const choices = Array.from(qDiv.querySelectorAll('.answer-text')).map(input => input.value);
+                    const correctIndex = parseInt(qDiv.querySelector('input[type="radio"]:checked').value);
+                    
+                    if (questionText && choices.every(c => c)) {
+                        questions.push({
+                            text: questionText,
+                            choices: choices,
+                            correct: correctIndex
+                        });
+                    }
+                });
+                
+                if (lines.length > 0 && questions.length > 0) {
+                    dialogues.push({ lines, questions });
+                }
+            });
+
+            if (dialogues.length === 0) {
+                alert('Please add at least one dialogue exercise with lines and questions');
+                return;
+            }
+
+            try {
+                const response = await fetch('handler.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'generate_dialogue',
+                        title: title,
+                        timerDuration: timerDuration,
+                        dialogues: dialogues
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayDialogueOutputs(result.files);
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error generating activity: ' + error.message);
+            }
+        }
+
+        async function generateSpeakingActivity() {
+            const title = document.getElementById('speaking-title').value;
+            const timerDuration = parseInt(document.getElementById('speaking-timer-duration').value) || 300;
+            
+            const exercises = [];
+            document.querySelectorAll('#speaking-exercises-container .question-item').forEach((item, index) => {
+                const instructions = item.querySelector('.exercise-instructions').value;
+                const image = item.querySelector('.exercise-image').value;
+                
+                const dialogue = [];
+                item.querySelectorAll('.speaking-dialogue-container > div').forEach(partDiv => {
+                    const side = partDiv.querySelector('.dialogue-side').value;
+                    const answersText = partDiv.querySelector('.dialogue-answers').value;
+                    const answers = answersText.split('\n').map(a => a.trim()).filter(a => a);
+                    
+                    if (answers.length > 0) {
+                        dialogue.push({ side, answers });
+                    }
+                });
+                
+                if (instructions && dialogue.length > 0) {
+                    exercises.push({ instructions, image, dialogue });
+                }
+            });
+
+            if (exercises.length === 0) {
+                alert('Please add at least one exercise with dialogue parts');
+                return;
+            }
+
+            try {
+                const response = await fetch('handler.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'generate_speaking',
+                        title: title,
+                        timerDuration: timerDuration,
+                        exercises: exercises
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    displaySpeakingOutputs(result.files);
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error generating activity: ' + error.message);
+            }
+        }
+
+        async function generateWordClickActivity() {
+            const title = document.getElementById('wordclick-title').value;
+            const timerDuration = parseInt(document.getElementById('wordclick-timer-duration').value) || 300;
+            
+            const exercises = [];
+            document.querySelectorAll('#wordclick-exercises-container .question-item').forEach((item, index) => {
+                const sentence = item.querySelector('.exercise-sentence').value;
+                
+                const verbs = [];
+                item.querySelectorAll('.wordclick-verbs-container > div').forEach(verbDiv => {
+                    const text = verbDiv.querySelector('.verb-text').value;
+                    const optionsText = verbDiv.querySelector('.verb-options').value;
+                    const options = optionsText.split(',').map(o => o.trim()).filter(o => o);
+                    const correct = verbDiv.querySelector('.verb-correct').value;
+                    
+                    if (text && options.length > 0 && correct) {
+                        verbs.push({ text, options, correct });
+                    }
+                });
+                
+                if (sentence && verbs.length > 0) {
+                    exercises.push({ sentence, verbs });
+                }
+            });
+
+            if (exercises.length === 0) {
+                alert('Please add at least one exercise with verbs');
+                return;
+            }
+
+            try {
+                const response = await fetch('handler.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'generate_wordclick',
+                        title: title,
+                        timerDuration: timerDuration,
+                        exercises: exercises
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayWordClickOutputs(result.files);
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error generating activity: ' + error.message);
+            }
+        }
+
+        function displayListeningOutputs(files) {
+            const outputSection = document.getElementById('listening-output');
+            const downloadsDiv = document.getElementById('listening-downloads');
+            
+            downloadsDiv.innerHTML = files.map(file => `
+                <a href="${file.path}" class="download-link" download>
+                    <span>${file.name}</span>
+                    <span>⬇</span>
+                </a>
+            `).join('');
+            
+            outputSection.style.display = 'block';
+        }
+
+        function displayWritingOutputs(files) {
+            const outputSection = document.getElementById('writing-output');
+            const downloadsDiv = document.getElementById('writing-downloads');
+            
+            downloadsDiv.innerHTML = files.map(file => `
+                <a href="${file.path}" class="download-link" download>
+                    <span>${file.name}</span>
+                    <span>⬇</span>
+                </a>
+            `).join('');
+            
+            outputSection.style.display = 'block';
+        }
+
+        function displayDialogueOutputs(files) {
+            const outputSection = document.getElementById('dialogue-output');
+            const downloadsDiv = document.getElementById('dialogue-downloads');
+            
+            downloadsDiv.innerHTML = files.map(file => `
+                <a href="${file.path}" class="download-link" download>
+                    <span>${file.name}</span>
+                    <span>⬇</span>
+                </a>
+            `).join('');
+            
+            outputSection.style.display = 'block';
+        }
+
+        function displaySpeakingOutputs(files) {
+            const outputSection = document.getElementById('speaking-output');
+            const downloadsDiv = document.getElementById('speaking-downloads');
+            
+            downloadsDiv.innerHTML = files.map(file => `
+                <a href="${file.path}" class="download-link" download>
+                    <span>${file.name}</span>
+                    <span>⬇</span>
+                </a>
+            `).join('');
+            
+            outputSection.style.display = 'block';
+        }
+
+        function displayWordClickOutputs(files) {
+            const outputSection = document.getElementById('wordclick-output');
+            const downloadsDiv = document.getElementById('wordclick-downloads');
+            
+            downloadsDiv.innerHTML = files.map(file => `
+                <a href="${file.path}" class="download-link" download>
+                    <span>${file.name}</span>
+                    <span>⬇</span>
+                </a>
+            `).join('');
+            
+            outputSection.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
