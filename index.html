@@ -55,7 +55,7 @@
         input, textarea {
             width: 100%;
             padding: 0.75rem;
-            font-size: 20px; /* Increased font size for user text */
+            font-size: 20px;
             border-radius: 5px;
             border: 1px solid #667eea;
             box-sizing: border-box;
@@ -79,6 +79,18 @@
         button:hover {
             background: #45a049;
         }
+        .popup-btn {
+            background: #007bff;
+            width: auto;
+            padding: 0.5rem 1rem;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        .popup-btn:hover {
+            background: #0069d9;
+        }
         .message {
             background: #d4edda;
             color: #155724;
@@ -97,8 +109,8 @@
             width: 100%;
         }
         .character-bar button {
-            padding: 10px 12px; /* Increased padding for larger buttons */
-            font-size: 24px; /* Increased font size for character buttons */
+            padding: 10px 12px;
+            font-size: 24px;
             background: #667eea;
             color: white;
             border: none;
@@ -120,6 +132,9 @@
 <body>
     <div class="title">Assignment</div>
     <div class="exercise-container">
+        <!-- Pop-up button -->
+        <button class="popup-btn" onclick="openInPopup()">🔵 Open Activity in Pop-Up</button>
+
         <div id="message-container"></div>
         <form id="assignmentForm" style="width: 100%;">
             <div class="form-group">
@@ -144,7 +159,18 @@
             <button type="submit">Submit Assignment</button>
         </form>
     </div>
+
     <script>
+        // open unsandboxed pop-up
+        function openInPopup() {
+            const popup = window.open(
+                window.location.href,
+                "assignmentPopup",
+                "width=900,height=700,scrollbars=yes,resizable=yes"
+            );
+            if (!popup) alert("Please allow pop-ups for this site to open the activity.");
+        }
+
         function insertCharacter(char) {
             const textarea = document.getElementById('assignment');
             const start = textarea.selectionStart;
@@ -156,6 +182,7 @@
             textarea.setSelectionRange(newPos, newPos);
             textarea.focus();
         }
+
         document.getElementById("assignmentForm").addEventListener("submit", async function(e) {
             e.preventDefault();
             const form = e.target;
